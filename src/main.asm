@@ -1,4 +1,4 @@
-INCLUDE "C:\\Users\\carlo\\Desktop\\Periodo 7\\IHS\\Projeto jogo\\code\\hardware.inc"
+INCLUDE "C:\\Users\\carlo\\Desktop\\Periodo 7\\IHS\\Projeto jogo\\src\\hardware.inc"
 SECTION "Header", ROM0[$100]
 
 EntryPoint: ; This is where execution begins
@@ -57,7 +57,7 @@ Start:
 SECTION "Font", ROM0
 
 FontTiles:
-INCBIN "C:\\Users\\carlo\\Desktop\\Periodo 7\\IHS\\Projeto jogo\\code\\font.chr"
+INCBIN "C:\\Users\\carlo\\Desktop\\Periodo 7\\IHS\\Projeto jogo\\src\\font.chr"
 FontTilesEnd:
 
 SECTION "Hello World string", ROM0
