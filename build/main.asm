@@ -37,22 +37,22 @@
 ; code
 ;--------------------------------------------------------
 	.area _CODE
-;..\src\main.c:15: void main() {
+;..\src\main.c:4: void main() {
 ;	---------------------------------
 ; Function main
 ; ---------------------------------
 _main::
-;..\src\main.c:19: printf("Hello World!");
+;..\src\main.c:5: printf("Hello World!");
 	ld	hl, #___str_0
 	push	hl
 	call	_printf
 	add	sp, #2
-;..\src\main.c:22: printf("\n\nPress Start");
+;..\src\main.c:6: printf("\n\nPress Start");
 	ld	hl, #___str_1
 	push	hl
 	call	_printf
 	add	sp, #2
-;..\src\main.c:23: }
+;..\src\main.c:7: }
 	ret
 ___str_0:
 	.ascii "Hello World!"

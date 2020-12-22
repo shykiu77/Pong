@@ -37,22 +37,22 @@
                                      37 ; code
                                      38 ;--------------------------------------------------------
                                      39 	.area _CODE
-                                     40 ;..\src\main.c:15: void main() {
+                                     40 ;..\src\main.c:4: void main() {
                                      41 ;	---------------------------------
                                      42 ; Function main
                                      43 ; ---------------------------------
       000000                         44 _main::
-                                     45 ;..\src\main.c:19: printf("Hello World!");
+                                     45 ;..\src\main.c:5: printf("Hello World!");
       000000 21r13r00                46 	ld	hl, #___str_0
       000003 E5                      47 	push	hl
       000004 CDr00r00                48 	call	_printf
       000007 E8 02                   49 	add	sp, #2
-                                     50 ;..\src\main.c:22: printf("\n\nPress Start");
+                                     50 ;..\src\main.c:6: printf("\n\nPress Start");
       000009 21r20r00                51 	ld	hl, #___str_1
       00000C E5                      52 	push	hl
       00000D CDr00r00                53 	call	_printf
       000010 E8 02                   54 	add	sp, #2
-                                     55 ;..\src\main.c:23: }
+                                     55 ;..\src\main.c:7: }
       000012 C9                      56 	ret
       000013                         57 ___str_0:
       000013 48 65 6C 6C 6F 20 57    58 	.ascii "Hello World!"
