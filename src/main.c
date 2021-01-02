@@ -8,8 +8,26 @@
 
 #define TILE_SIZE 8
 
+WORD ball_x = SCREENWIDTH/2;
+WORD ball_y = SCREENHEIGHT/2;
+
+WORD x_velocity = 2;
+WORD y_velocity = 0;
+
+void update_ball(){
+    ball_x += x_velocity;
+    ball_y += y_velocity;
+    if(ball_x >= SCREENWIDTH || ball_x <= 0){
+        ball_x = (ball_x >=  SCREENWIDTH ? SCREENWIDTH : 0);
+        x_velocity = - x_velocity;
+    }
+    move_sprite(BALL,ball_x,ball_y);
+}
+
 void set_props(){
-    move_sprite(BALL,SCREENWIDTH/2,SCREENHEIGHT/2);
+    ball_x = SCREENWIDTH/2;
+    ball_y = SCREENHEIGHT/2;
+    update_ball();
 
     move_sprite(L_BAR,TILE_SIZE,SCREENHEIGHT/2 - TILE_SIZE);
     move_sprite(L_BAR+1,TILE_SIZE,SCREENHEIGHT/2 - TILE_SIZE + TILE_SIZE);
@@ -25,6 +43,8 @@ void set_props(){
 void hide(int sprite){
     move_sprite(sprite,-10,-10);
 }
+
+
 
 void main(){
     SPRITES_8x8;
@@ -49,6 +69,10 @@ void main(){
     set_sprite_tile(8,8);
 
     set_props();
-    hide(BALL);
     SHOW_SPRITES;
+    while(1){
+        wait_vbl_done();
+        delay(20);
+        update_ball();
+    }
 }
