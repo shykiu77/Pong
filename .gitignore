@@ -7,3 +7,4 @@ build/main.map
 build/main.noi
 build/main.o
 build/main.sym
+/tools/emulator/bgbrecovery.sna
