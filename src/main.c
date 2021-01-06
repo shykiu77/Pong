@@ -32,7 +32,7 @@ WORD ball_dy = 1;
 
 WORD action = 3;
 
-
+WORD difficulty = 2;
 void update_ball(){
     ball_x += x_velocity;
     ball_y += y_velocity;
