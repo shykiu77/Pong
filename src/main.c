@@ -1,6 +1,11 @@
 #include <gb/gb.h>
-#include "ball.c"
-#include "bar.c"
+#include "../assets/ball.c"
+#include "../assets/bar.c"
+#include "../assets/font.c"
+#include "../assets/map.c"
+#include "../assets/map2.c"
+#include "../assets/gray.c"
+
 #include <gb/drawing.h>
 #include <stdio.h>
 
@@ -88,16 +93,30 @@ void loadMenu(){
 
 
 void main(){
+    set_bkg_data(0,6,font);
+    
+    set_bkg_tiles(0,0,20,18,map);
+    SHOW_BKG;
+
+    int start = FALSE;
+    while(!start){
+        pad = joypad();
+        if(pad)
+            start = TRUE;
+    }
+    set_bkg_data(0,1,gray);
+    set_bkg_tiles(0,0,20,18,map2);
+    SHOW_BKG;
     SPRITES_8x8;
-    set_sprite_data(0,0,ball);
-    set_sprite_data(1,0,bar);
-    set_sprite_data(2,0,bar);
-    set_sprite_data(3,0,bar);
-    set_sprite_data(4,0,bar);
-    set_sprite_data(5,0,bar);
-    set_sprite_data(6,0,bar);
-    set_sprite_data(7,0,bar);
-    set_sprite_data(8,0,bar);
+    set_sprite_data(0,1,ball);
+    set_sprite_data(1,1,bar);
+    set_sprite_data(2,1,bar);
+    set_sprite_data(3,1,bar);
+    set_sprite_data(4,1,bar);
+    set_sprite_data(5,1,bar);
+    set_sprite_data(6,1,bar);
+    set_sprite_data(7,1,bar);
+    set_sprite_data(8,1,bar);
 
     set_sprite_tile(0,0);
     set_sprite_tile(1,1);
@@ -110,6 +129,7 @@ void main(){
     set_sprite_tile(8,8);
 
     set_props();
+   
     SHOW_SPRITES;
     while(1){
         pad = joypad();
