@@ -19,9 +19,10 @@ WORD x_velocity = 2;
 WORD y_velocity = 0;
 
 WORD pad;
-WORD gameover = 1;
+//WORD gameover = 1;
 WORD i = 1;
-WORD y = SCREENHEIGHT/2 - TILE_SIZE;
+WORD yl = SCREENHEIGHT/2 - TILE_SIZE;  //y da barra da esquerda
+WORD yr = SCREENHEIGHT/2 - TILE_SIZE;  //y da barra da direita
 
 //propriedades da bola
 WORD ball_x = SCREENWIDTH/2;
@@ -29,10 +30,26 @@ WORD ball_y = SCREENHEIGHT/2;
 WORD ball_dx = 1;
 WORD ball_dy = 1;
 
+//propriedades da barra
+WORD posicaotopo = 0;
+WORD posicaomeio1 = 0;
+WORD posicaomeio2 = 0;
+WORD posicaobaixo = 0;
 
 WORD action = 3;
 
+//controle de reinicio da partida caso alguem pontue
+WORD reinicia = 2; // 0 = false, 1 = true, 2 = null  
+
+
 WORD difficulty = 2;
+
+WORD RADIUS_BALL = 4;
+
+//players
+WORD score_player = 0;
+WORD score_computer = 0;
+
 void update_ball(){
     ball_x += x_velocity;
     ball_y += y_velocity;
@@ -48,22 +65,90 @@ void move_bar() {
 	// if the up arrow is pressed move paddle up
 	if (action == 1) {
 
-	    move_sprite(L_BAR,TILE_SIZE,y-i);
-        move_sprite(L_BAR+1,TILE_SIZE,y + TILE_SIZE-i);
-        move_sprite(L_BAR+2,TILE_SIZE,y + 2*TILE_SIZE-i);
-        move_sprite(L_BAR+3,TILE_SIZE,y + 3*TILE_SIZE-i);
-        y -= i;
+	    move_sprite(L_BAR,TILE_SIZE,yl-i);
+        move_sprite(L_BAR+1,TILE_SIZE,yl + TILE_SIZE-i);
+        move_sprite(L_BAR+2,TILE_SIZE,yl + 2*TILE_SIZE-i);
+        move_sprite(L_BAR+3,TILE_SIZE,yl + 3*TILE_SIZE-i);
+        posicaotopo = yl-i;
+        posicaomeio1 = yl +TILE_SIZE - i;
+        posicaomeio2 = yl +2*TILE_SIZE - i;
+        posicaobaixo = yl +3*TILE_SIZE-i;
+        yl -= i; 
         action = 3;
 	}
     if (action == 0) {
 
-	    move_sprite(L_BAR,TILE_SIZE,y+i);
-        move_sprite(L_BAR+1,TILE_SIZE,y + TILE_SIZE+i);
-        move_sprite(L_BAR+2,TILE_SIZE,y + 2*TILE_SIZE+i);
-        move_sprite(L_BAR+3,TILE_SIZE,y + 3*TILE_SIZE+i);
-        y+= i;
+	    move_sprite(L_BAR,TILE_SIZE,yl + i);
+        move_sprite(L_BAR+1,TILE_SIZE,yl + TILE_SIZE + i);
+        move_sprite(L_BAR+2,TILE_SIZE,yl + 2*TILE_SIZE + i);
+        move_sprite(L_BAR+3,TILE_SIZE,yl + 3*TILE_SIZE + i);
+        posicaotopo = yl + i;
+        posicaomeio1 = yl +TILE_SIZE + i;
+        posicaomeio2 = yl +2*TILE_SIZE + i;
+        posicaobaixo = yl +3*TILE_SIZE + i;
+        yl+= i;
         action = 3;
 	}
+}
+
+void check_collision()
+{
+  // Bola toca na parede da IA
+  if (ball_x >= SCREENWIDTH)
+  {
+    //score_player++;
+    reinicia = 1;
+    return;
+  }
+
+  // Bola toca na parede do jogador
+  if (ball_x <= 0)
+  {
+    //score_computer++;
+    reinicia = 1;
+    return;
+
+  }
+
+  // Bola toca na parte superior ou inferior da tela
+  if (ball_y - RADIUS_BALL <= 0 || ball_y + RADIUS_BALL >= SCREENHEIGHT)
+  {
+    ball_dy = -1*ball_dy;
+    return;
+  }
+
+  // Bola toca o meio1 da barra da esquerda visto que a barra é devidida em 4 partes
+  if (ball_x - RADIUS_BALL == TILE_SIZE &&
+    (ball_y >= posicaomeio1 && ball_y <= posicaomeio1 + 2)
+  )
+  {
+    x_velocity = - x_velocity;
+    return;
+  }
+
+  // Bola toca o meio2 da barra da esquerda visto que a barra é devidida em 4 partes
+  if (ball_x - RADIUS_BALL == TILE_SIZE &&
+    (ball_y >= posicaomeio2 && ball_y <= posicaomeio2 + 2)
+  )
+  {
+    x_velocity = - x_velocity;
+    return;
+  }
+
+  // Bola toca o meio1 da barra da direita
+  if (ball_x + RADIUS_BALL == SCREENWIDTH && (ball_y >= yr + TILE_SIZE && ball_y <= yr + TILE_SIZE + 2))
+  {
+    x_velocity = - x_velocity;
+    return;
+  } 
+
+  // Bola toca o meio2 da barra da direita
+  if (ball_x + RADIUS_BALL == SCREENWIDTH && (ball_y >= yr + 2*TILE_SIZE && ball_y <= yr + 2*TILE_SIZE + 2))
+  {
+    x_velocity = - x_velocity;
+    return;
+  } 
+  
 }
 
 
@@ -73,15 +158,20 @@ void set_props(){
     ball_y = SCREENHEIGHT/2;
     update_ball();
 
-    move_sprite(L_BAR,TILE_SIZE,SCREENHEIGHT/2 - TILE_SIZE);
-    move_sprite(L_BAR+1,TILE_SIZE,SCREENHEIGHT/2 - TILE_SIZE + TILE_SIZE);
-    move_sprite(L_BAR+2,TILE_SIZE,SCREENHEIGHT/2 - TILE_SIZE + 2*TILE_SIZE);
-    move_sprite(L_BAR+3,TILE_SIZE,SCREENHEIGHT/2 - TILE_SIZE + 3*TILE_SIZE);
+    move_sprite(L_BAR,TILE_SIZE,yl);
+    move_sprite(L_BAR+1,TILE_SIZE,yl + TILE_SIZE);
+    move_sprite(L_BAR+2,TILE_SIZE,yl + 2*TILE_SIZE);
+    move_sprite(L_BAR+3,TILE_SIZE,yl + 3*TILE_SIZE);
+    //salvando as posicoes da barra
+    posicaotopo = yl;
+    posicaomeio1 = yl +TILE_SIZE;
+    posicaomeio2 = yl +2*TILE_SIZE;
+    posicaobaixo = yl +3*TILE_SIZE;
 
-    move_sprite(R_BAR,SCREENWIDTH,SCREENHEIGHT/2 - TILE_SIZE);
-    move_sprite(R_BAR+1,SCREENWIDTH,SCREENHEIGHT/2 - TILE_SIZE + TILE_SIZE);
-    move_sprite(R_BAR+2,SCREENWIDTH,SCREENHEIGHT/2 - TILE_SIZE + 2*TILE_SIZE);
-    move_sprite(R_BAR+3,SCREENWIDTH,SCREENHEIGHT/2 - TILE_SIZE + 3*TILE_SIZE);
+    move_sprite(R_BAR,SCREENWIDTH,yr);
+    move_sprite(R_BAR+1,SCREENWIDTH,yr + TILE_SIZE);
+    move_sprite(R_BAR+2,SCREENWIDTH,yr + 2*TILE_SIZE);
+    move_sprite(R_BAR+3,SCREENWIDTH,yr + 3*TILE_SIZE);
 }
 void hide(int sprite){
     move_sprite(sprite,-10,-10);
@@ -141,7 +231,12 @@ void main(){
             action = 0;
             move_bar();
         }
-        
+        check_collision();
+        if (reinicia == 1){
+            yl = SCREENHEIGHT/2 - TILE_SIZE;
+            set_props();
+            reinicia = 0;
+        }
         wait_vbl_done();
         delay(20);
         //drawUI();
