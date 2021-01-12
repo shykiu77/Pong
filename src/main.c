@@ -30,7 +30,7 @@ WORD ball_y = SCREENHEIGHT/2;
 WORD ball_dx = 1;
 WORD ball_dy = 1;
 
-//propriedades da barra
+//propriedades da barra da esquerda
 WORD posicaotopo = 0;
 WORD posicaomeio1 = 0;
 WORD posicaomeio2 = 0;
@@ -62,7 +62,7 @@ void update_ball(){
 
 void move_bar() {
 
-	// if the up arrow is pressed move paddle up
+	// mover para cima
 	if (action == 1) {
 
 	    move_sprite(L_BAR,TILE_SIZE,yl-i);
@@ -76,6 +76,7 @@ void move_bar() {
         yl -= i; 
         action = 3;
 	}
+  //mover para baixo
     if (action == 0) {
 
 	    move_sprite(L_BAR,TILE_SIZE,yl + i);
@@ -118,18 +119,14 @@ void check_collision()
   }
 
   // Bola toca o meio1 da barra da esquerda visto que a barra é devidida em 4 partes
-  if (ball_x - RADIUS_BALL == TILE_SIZE &&
-    (ball_y >= posicaomeio1 && ball_y <= posicaomeio1 + 2)
-  )
+  if (ball_x - RADIUS_BALL == TILE_SIZE && (ball_y >= posicaomeio1 && ball_y <= posicaomeio1 + 2))
   {
     x_velocity = - x_velocity;
     return;
   }
 
-  // Bola toca o meio2 da barra da esquerda visto que a barra é devidida em 4 partes
-  if (ball_x - RADIUS_BALL == TILE_SIZE &&
-    (ball_y >= posicaomeio2 && ball_y <= posicaomeio2 + 2)
-  )
+  // Bola toca o meio2 da barra da esquerda visto que a barra é dividida em 4 partes
+  if (ball_x - RADIUS_BALL == TILE_SIZE && (ball_y >= posicaomeio2 && ball_y <= posicaomeio2 + 2))
   {
     x_velocity = - x_velocity;
     return;
@@ -147,7 +144,15 @@ void check_collision()
   {
     x_velocity = - x_velocity;
     return;
-  } 
+  }
+
+    // Bola toca o inicio ou fim da barra da esquerda
+  if ((ball_y + RADIUS_BALL == yl-i + 2 || ball_y - RADIUS_BALL == yl-i) && (ball_x >= TILE_SIZE && ball_x <= TILE_SIZE + 2))
+  {
+    x_velocity = - x_velocity;
+    return;
+  }
+
   
 }
 
