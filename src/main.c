@@ -8,6 +8,7 @@
 
 #include <gb/drawing.h>
 #include <stdio.h>
+#include <stdlib.h>  //uso da funcao rand
 
 #define BALL 0
 #define L_BAR 1
@@ -15,8 +16,8 @@
 
 #define TILE_SIZE 8
 
-WORD x_velocity = 2;
-WORD y_velocity = 0;
+WORD x_velocity;
+WORD y_velocity; 
 
 WORD pad;
 //WORD gameover = 1;
@@ -27,8 +28,6 @@ WORD yr = SCREENHEIGHT/2 - TILE_SIZE;  //y da barra da direita
 //propriedades da bola
 WORD ball_x = SCREENWIDTH/2;
 WORD ball_y = SCREENHEIGHT/2;
-WORD ball_dx = 1;
-WORD ball_dy = 1;
 
 //propriedades da barra da esquerda
 WORD posicaotopo = 0;
@@ -53,10 +52,10 @@ WORD score_computer = 0;
 void update_ball(){
     ball_x += x_velocity;
     ball_y += y_velocity;
-    if(ball_x >= SCREENWIDTH || ball_x <= 0){
-        ball_x = (ball_x >=  SCREENWIDTH ? SCREENWIDTH : 0);
-        x_velocity = - x_velocity;
-    }
+    //if(ball_x >= SCREENWIDTH || ball_x <= 0){
+     //   ball_x = (ball_x >=  SCREENWIDTH ? SCREENWIDTH : 0);
+      //  x_velocity = - x_velocity;
+   // }
     move_sprite(BALL,ball_x,ball_y);
 }
 
@@ -114,7 +113,7 @@ void check_collision()
   // Bola toca na parte superior ou inferior da tela
   if (ball_y - RADIUS_BALL <= 0 || ball_y + RADIUS_BALL >= SCREENHEIGHT)
   {
-    ball_dy = -1*ball_dy;
+    y_velocity *= -1;
     return;
   }
 
@@ -149,7 +148,7 @@ void check_collision()
     // Bola toca o inicio ou fim da barra da esquerda
   if ((ball_y + RADIUS_BALL == yl-i + 2 || ball_y - RADIUS_BALL == yl-i) && (ball_x >= TILE_SIZE && ball_x <= TILE_SIZE + 2))
   {
-    x_velocity = - x_velocity;
+    y_velocity *= -1;
     return;
   }
 
@@ -159,6 +158,7 @@ void check_collision()
 
 
 void set_props(){
+  
     ball_x = SCREENWIDTH/2;
     ball_y = SCREENHEIGHT/2;
     update_ball();
@@ -237,14 +237,27 @@ void main(){
             move_bar();
         }
         check_collision();
-        if (reinicia == 1){
+        if (reinicia == 1){  //quando o jogo reiniciar por pontuação
             yl = SCREENHEIGHT/2 - TILE_SIZE;
             set_props();
+            //randomizando o x e y da bola quando inicia a partida >falta calibrar<
+            x_velocity = (rand() % 3 + 1);
+            y_velocity = (rand() % 3 + 1);
+            
+            x_velocity *= (rand() % 2) ? 1 : -1;
+            y_velocity *= (rand() % 2) ? 1 : -1;
+            reinicia = 0;
+        }
+        if (reinicia == 2){    //quando o jogo roda a primeira vez
+            x_velocity = (rand() % 3 + 1);
+            y_velocity = (rand() % 3 + 1);
+            
+            x_velocity *= (rand() % 2) ? 1 : -1;
+            y_velocity *= (rand() % 2) ? 1 : -1;
             reinicia = 0;
         }
         wait_vbl_done();
         delay(20);
-        //drawUI();
         update_ball();
         //gameover = 0;
         
