@@ -8,7 +8,7 @@
 
 #include <gb/drawing.h>
 #include <stdio.h>
-#include <stdlib.h>  //uso da funcao rand
+//#include <stdlib.h>  //uso da funcao rand
 
 #define BALL 0
 #define L_BAR 1
@@ -16,12 +16,12 @@
 
 #define TILE_SIZE 8
 
-WORD x_velocity;
+WORD x_velocity;         
 WORD y_velocity; 
 
-WORD pad;
+WORD pad; //variavel para captar os inputs do gameboy
 //WORD gameover = 1;
-WORD i = 1;
+
 WORD yl = SCREENHEIGHT/2 - TILE_SIZE;  //y da barra da esquerda
 WORD yr = SCREENHEIGHT/2 - TILE_SIZE;  //y da barra da direita
 
@@ -34,16 +34,16 @@ WORD posicaotopo = 0;
 WORD posicaomeio1 = 0;
 WORD posicaomeio2 = 0;
 WORD posicaobaixo = 0;
-
-WORD action = 3;
+WORD i = 2; //velocidade de movimentacao barra da esquerda
+WORD action = 3;   //1 = barra p/ cima ; 0 = barra p/ baixo ; 3 = nenhuma acao
 
 //controle de reinicio da partida caso alguem pontue
 WORD reinicia = 2; // 0 = false, 1 = true, 2 = null  
 
 
-WORD difficulty = 2;
+//WORD difficulty = 2;  nao esta sendo utilizada ainda
 
-WORD RADIUS_BALL = 4;
+WORD RADIUS_BALL = 4;   
 
 //players
 WORD score_player = 0;
@@ -149,6 +149,7 @@ void check_collision()
   if ((ball_y + RADIUS_BALL == yl-i + 2 || ball_y - RADIUS_BALL == yl-i) && (ball_x >= TILE_SIZE && ball_x <= TILE_SIZE + 2))
   {
     y_velocity *= -1;
+    x_velocity *= -1;
     return;
   }
 
@@ -240,20 +241,14 @@ void main(){
         if (reinicia == 1){  //quando o jogo reiniciar por pontuação
             yl = SCREENHEIGHT/2 - TILE_SIZE;
             set_props();
-            //randomizando o x e y da bola quando inicia a partida >falta calibrar<
-            x_velocity = (rand() % 3 + 1);
-            y_velocity = (rand() % 3 + 1);
-            
-            x_velocity *= (rand() % 2) ? 1 : -1;
-            y_velocity *= (rand() % 2) ? 1 : -1;
+            //randomizacao removida momentaneamente
+            x_velocity = 2;
+            y_velocity = 0;
             reinicia = 0;
         }
         if (reinicia == 2){    //quando o jogo roda a primeira vez
-            x_velocity = (rand() % 3 + 1);
-            y_velocity = (rand() % 3 + 1);
-            
-            x_velocity *= (rand() % 2) ? 1 : -1;
-            y_velocity *= (rand() % 2) ? 1 : -1;
+            x_velocity = 2;
+            y_velocity = 0;
             reinicia = 0;
         }
         wait_vbl_done();
