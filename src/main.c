@@ -63,31 +63,33 @@ void move_bar() {
 
 	// mover para cima
 	if (action == 1) {
+      posicaotopo = yl-i;
+      posicaomeio1 = yl +TILE_SIZE - i;
+      posicaomeio2 = yl +2*TILE_SIZE - i;
+      posicaobaixo = yl +3*TILE_SIZE-i;
+      yl -= i; 
 
-	    move_sprite(L_BAR,TILE_SIZE,yl-i);
-        move_sprite(L_BAR+1,TILE_SIZE,yl + TILE_SIZE-i);
-        move_sprite(L_BAR+2,TILE_SIZE,yl + 2*TILE_SIZE-i);
-        move_sprite(L_BAR+3,TILE_SIZE,yl + 3*TILE_SIZE-i);
-        posicaotopo = yl-i;
-        posicaomeio1 = yl +TILE_SIZE - i;
-        posicaomeio2 = yl +2*TILE_SIZE - i;
-        posicaobaixo = yl +3*TILE_SIZE-i;
-        yl -= i; 
-        action = 3;
+	    move_sprite(L_BAR,TILE_SIZE,posicaotopo);
+      move_sprite(L_BAR+1,TILE_SIZE,posicaomeio1);
+      move_sprite(L_BAR+2,TILE_SIZE,posicaomeio2);
+      move_sprite(L_BAR+3,TILE_SIZE,posicaobaixo);
+      
+      action = 3;
 	}
   //mover para baixo
     if (action == 0) {
+      posicaotopo = yl + i;
+      posicaomeio1 = yl +TILE_SIZE + i;
+      posicaomeio2 = yl +2*TILE_SIZE + i;
+      posicaobaixo = yl +3*TILE_SIZE + i;
+      yl+= i;
 
-	    move_sprite(L_BAR,TILE_SIZE,yl + i);
-        move_sprite(L_BAR+1,TILE_SIZE,yl + TILE_SIZE + i);
-        move_sprite(L_BAR+2,TILE_SIZE,yl + 2*TILE_SIZE + i);
-        move_sprite(L_BAR+3,TILE_SIZE,yl + 3*TILE_SIZE + i);
-        posicaotopo = yl + i;
-        posicaomeio1 = yl +TILE_SIZE + i;
-        posicaomeio2 = yl +2*TILE_SIZE + i;
-        posicaobaixo = yl +3*TILE_SIZE + i;
-        yl+= i;
-        action = 3;
+	    move_sprite(L_BAR,TILE_SIZE,posicaotopo);
+      move_sprite(L_BAR+1,TILE_SIZE,posicaomeio1);
+      move_sprite(L_BAR+2,TILE_SIZE,posicaomeio2);
+      move_sprite(L_BAR+3,TILE_SIZE,posicaobaixo);
+
+      action = 3;
 	}
 }
 
@@ -117,42 +119,31 @@ void check_collision()
     return;
   }
 
-  // Bola toca o meio1 da barra da esquerda visto que a barra é devidida em 4 partes
-  if (ball_x - RADIUS_BALL == TILE_SIZE && (ball_y >= posicaomeio1 && ball_y <= posicaomeio1 + 2))
+  // Bola toca na barra esquerda
+  if (ball_x - RADIUS_BALL == TILE_SIZE && ball_y>=yl-RADIUS_BALL && ball_y<=yl+4*TILE_SIZE+RADIUS_BALL)
   {
     x_velocity = - x_velocity;
+    if(ball_y-yl <8)
+      y_velocity = -1;
+    else if(ball_y-yl > 16)
+      y_velocity = 1;
+    else
+      y_velocity = 0;
     return;
   }
 
-  // Bola toca o meio2 da barra da esquerda visto que a barra é dividida em 4 partes
-  if (ball_x - RADIUS_BALL == TILE_SIZE && (ball_y >= posicaomeio2 && ball_y <= posicaomeio2 + 2))
+  // Bola toca na barra direita
+  if (ball_x + RADIUS_BALL == SCREENWIDTH && ball_y>=yr-RADIUS_BALL && ball_y<=yr+4*TILE_SIZE+RADIUS_BALL)
   {
     x_velocity = - x_velocity;
-    return;
-  }
-
-  // Bola toca o meio1 da barra da direita
-  if (ball_x + RADIUS_BALL == SCREENWIDTH && (ball_y >= yr + TILE_SIZE && ball_y <= yr + TILE_SIZE + 2))
-  {
-    x_velocity = - x_velocity;
+    if(ball_y-yr <8)
+      y_velocity = -1;
+    else if(ball_y-yr > 16)
+      y_velocity = 1;
+    else
+      y_velocity = 0;
     return;
   } 
-
-  // Bola toca o meio2 da barra da direita
-  if (ball_x + RADIUS_BALL == SCREENWIDTH && (ball_y >= yr + 2*TILE_SIZE && ball_y <= yr + 2*TILE_SIZE + 2))
-  {
-    x_velocity = - x_velocity;
-    return;
-  }
-
-    // Bola toca o inicio ou fim da barra da esquerda
-  if ((ball_y + RADIUS_BALL == yl-i + 2 || ball_y - RADIUS_BALL == yl-i) && (ball_x >= TILE_SIZE && ball_x <= TILE_SIZE + 2))
-  {
-    y_velocity *= -1;
-    x_velocity *= -1;
-    return;
-  }
-
   
 }
 
