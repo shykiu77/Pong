@@ -54,6 +54,9 @@ WORD RADIUS_BALL = 4;
 WORD score_player = 0;
 WORD score_computer = 0;
 
+WORD LEFT_LIMIT = 2*TILE_SIZE;
+WORD RIGHT_LIMIT = 19*TILE_SIZE;
+WORD UP_LIMIT = 15*TILE_SIZE;
 void update_ball()
 {
   ball_x += x_velocity;
@@ -122,7 +125,7 @@ void check_collision()
   }
 
   // Bola toca na parede do jogador
-  if (ball_x <= 0)
+  if (ball_x <= LEFT_LIMIT)
   {
     //score_computer++;
     reinicia = 1;
@@ -263,20 +266,20 @@ void set_props()
   ball_y = SCREENHEIGHT / 2;
   update_ball();
 
-  move_sprite(L_BAR, TILE_SIZE, yl);
-  move_sprite(L_BAR + 1, TILE_SIZE, yl + TILE_SIZE);
-  move_sprite(L_BAR + 2, TILE_SIZE, yl + 2 * TILE_SIZE);
-  move_sprite(L_BAR + 3, TILE_SIZE, yl + 3 * TILE_SIZE);
+  move_sprite(L_BAR, LEFT_LIMIT, yl);
+  move_sprite(L_BAR + 1, LEFT_LIMIT, yl + TILE_SIZE);
+  move_sprite(L_BAR + 2, LEFT_LIMIT, yl + 2 * TILE_SIZE);
+  move_sprite(L_BAR + 3, LEFT_LIMIT, yl + 3 * TILE_SIZE);
   //salvando as posicoes da barra da esquerda
   posicaotopo = yl;
   posicaomeio1 = yl + TILE_SIZE;
   posicaomeio2 = yl + 2 * TILE_SIZE;
   posicaobaixo = yl + 3 * TILE_SIZE;
 
-  move_sprite(R_BAR, SCREENWIDTH, yr);
-  move_sprite(R_BAR + 1, SCREENWIDTH, yr + TILE_SIZE);
-  move_sprite(R_BAR + 2, SCREENWIDTH, yr + 2 * TILE_SIZE);
-  move_sprite(R_BAR + 3, SCREENWIDTH, yr + 3 * TILE_SIZE);
+  move_sprite(R_BAR, RIGHT_LIMIT, yr);
+  move_sprite(R_BAR + 1, RIGHT_LIMIT, yr + TILE_SIZE);
+  move_sprite(R_BAR + 2, RIGHT_LIMIT, yr + 2 * TILE_SIZE);
+  move_sprite(R_BAR + 3, RIGHT_LIMIT, yr + 3 * TILE_SIZE);
   //salvando as posicoes da barra da direita
   posicaotoporight = yr;
   posicaomeio1right = yr + TILE_SIZE;
@@ -306,7 +309,7 @@ void main()
     if (pad)
       start = TRUE;
   }
-  set_bkg_data(0, 1, gray);
+  set_bkg_data(0, 14, gray);
   set_bkg_tiles(0, 0, 20, 18, map2);
   SHOW_BKG;
   SPRITES_8x8;
@@ -362,7 +365,7 @@ void main()
       action = 0;
       move_bar();
     }
-    ia_bar();
+    //ia_bar();
     check_collision();
 
     wait_vbl_done();
