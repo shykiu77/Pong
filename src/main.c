@@ -5,6 +5,7 @@
 #include "../assets/map.c"
 #include "../assets/map2.c"
 #include "../assets/gray.c"
+#include "../assets/score.c"
 
 #include <gb/drawing.h>
 #include <stdio.h>
@@ -13,6 +14,9 @@
 #define BALL 0
 #define L_BAR 1
 #define R_BAR 5
+
+#define L_SCORE 9
+#define R_SCORE 15
 
 #define TILE_SIZE 8
 
@@ -68,6 +72,19 @@ void update_ball()
   move_sprite(BALL, ball_x, ball_y);
 }
 
+void hide(int sprite)
+{
+  move_sprite(sprite, -10, -10);
+}
+
+void mark_score_player(){
+  hide(L_SCORE+score_player-1);
+  move_sprite(L_SCORE+score_player,3*TILE_SIZE,2*TILE_SIZE);
+}
+void mark_score_computer(){
+  hide(R_SCORE+score_computer-1);
+  move_sprite(R_SCORE+score_computer,17*TILE_SIZE,2*TILE_SIZE);
+}
 void move_bar()
 {
   if (posicaobaixo <= 0 && action == 0) //pad p/ baixo mas ja esta no limite inferior da tela
@@ -119,7 +136,8 @@ void check_collision()
   // Bola toca na parede da IA
   if (ball_x >= SCREENWIDTH)
   {
-    //score_player++;
+    score_player++;
+    mark_score_player();
     reinicia = 1;
     return;
   }
@@ -127,7 +145,8 @@ void check_collision()
   // Bola toca na parede do jogador
   if (ball_x <= LEFT_LIMIT)
   {
-    //score_computer++;
+    score_computer++;
+    mark_score_computer();
     reinicia = 1;
     return;
   }
@@ -286,10 +305,7 @@ void set_props()
   posicaomeio2right = yr + 2 * TILE_SIZE;
   posicaobaixoright = yr + 3 * TILE_SIZE;
 }
-void hide(int sprite)
-{
-  move_sprite(sprite, -10, -10);
-}
+
 
 void loadMenu()
 {
@@ -323,18 +339,17 @@ void main()
   set_sprite_data(7, 1, bar);
   set_sprite_data(8, 1, bar);
 
-  set_sprite_tile(0, 0);
-  set_sprite_tile(1, 1);
-  set_sprite_tile(2, 2);
-  set_sprite_tile(3, 3);
-  set_sprite_tile(4, 4);
-  set_sprite_tile(5, 5);
-  set_sprite_tile(6, 6);
-  set_sprite_tile(7, 7);
-  set_sprite_tile(8, 8);
+  set_sprite_data(9,6,Score);
+  set_sprite_data(15,6,Score);
 
+
+  for(int i=0;i<=20;i++)
+    set_sprite_tile(i,i);
+  
   set_props();
-
+  move_sprite(L_SCORE,3*TILE_SIZE,2*TILE_SIZE);
+  move_sprite(R_SCORE,17*TILE_SIZE,2*TILE_SIZE);
+  
   SHOW_SPRITES;
   while (1)
   {
