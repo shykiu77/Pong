@@ -61,14 +61,13 @@ WORD score_computer = 0;
 WORD LEFT_LIMIT = 2*TILE_SIZE;
 WORD RIGHT_LIMIT = 19*TILE_SIZE;
 WORD UP_LIMIT = 15*TILE_SIZE;
+
+WORD fix = 2;
+
 void update_ball()
 {
   ball_x += x_velocity;
   ball_y += y_velocity;
-  //if(ball_x >= SCREENWIDTH || ball_x <= 0){
-  //   ball_x = (ball_x >=  SCREENWIDTH ? SCREENWIDTH : 0);
-  //  x_velocity = - x_velocity;
-  // }
   move_sprite(BALL, ball_x, ball_y);
 }
 
@@ -133,11 +132,15 @@ void move_bar()
 
 void check_collision()
 {
+
+  if(fix >= 0)
+    fix--;
   // Bola toca na parede da IA
-  if (ball_x >= SCREENWIDTH)
+  if (ball_x >= RIGHT_LIMIT)
   {
     score_player++;
-    mark_score_player();
+    if(fix < 0)
+      mark_score_player();
     reinicia = 1;
     return;
   }
@@ -146,7 +149,10 @@ void check_collision()
   if (ball_x <= LEFT_LIMIT)
   {
     score_computer++;
-    mark_score_computer();
+    if(fix < 0)
+      mark_score_computer();
+    else 
+      fix--;
     reinicia = 1;
     return;
   }
@@ -380,12 +386,14 @@ void main()
       action = 0;
       move_bar();
     }
+    
     //ia_bar();
+
+    update_ball();
     check_collision();
 
     wait_vbl_done();
     delay(20);
-    update_ball();
     //gameover = 0;
   }
 }
