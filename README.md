@@ -1,4 +1,4 @@
-# Snake-corona
+# Pong
 Projeto final da matéria ihs.
 
 
