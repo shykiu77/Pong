@@ -40,7 +40,7 @@ WORD posicaomeio2 = 0;
 WORD posicaobaixo = 0;
 
 WORD action = 3; //1 = barra p/ cima ; 0 = barra p/ baixo ; 3 = nenhuma acao
-WORD i = 2;      //velocidade de movimentacao das duas barras
+WORD i = 1;      //velocidade de movimentacao das duas barras
 
 //propriedades da barra da direita
 WORD posicaotoporight = 0;
