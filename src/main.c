@@ -61,6 +61,7 @@ WORD score_computer = 0;
 WORD LEFT_LIMIT = 2*TILE_SIZE;
 WORD RIGHT_LIMIT = 19*TILE_SIZE;
 WORD UP_LIMIT = 15*TILE_SIZE;
+WORD DOWN_LIMITE = 2*TILE_SIZE;
 
 WORD fix = 2;
 
@@ -132,7 +133,7 @@ void move_bar()
 
 void check_collision()
 {
-
+  //por algum motivo a velocidade x ganha um valor aleatório na primeira iteração do loop, esse fix serve para evitar que um ponto seja marcado equivocadamente.
   if(fix >= 0)
     fix--;
   // Bola toca na parede da IA
@@ -165,7 +166,7 @@ void check_collision()
   }
 
   // Bola toca na barra esquerda
-  if (ball_x - RADIUS_BALL == TILE_SIZE && ball_y >= yl - RADIUS_BALL && ball_y <= yl + 4 * TILE_SIZE + RADIUS_BALL)
+  if (ball_x - RADIUS_BALL == LEFT_LIMIT && ball_y >= yl - RADIUS_BALL && ball_y <= yl + 4 * TILE_SIZE + RADIUS_BALL)
   {
     x_velocity = -x_velocity;
     if (ball_y - yl < 8)
@@ -178,7 +179,7 @@ void check_collision()
   }
 
   // Bola toca na barra direita
-  if (ball_x + RADIUS_BALL == SCREENWIDTH && ball_y >= yr - RADIUS_BALL && ball_y <= yr + 4 * TILE_SIZE + RADIUS_BALL)
+  if (ball_x + RADIUS_BALL == RIGHT_LIMIT && ball_y >= yr - RADIUS_BALL && ball_y <= yr + 4 * TILE_SIZE + RADIUS_BALL)
   {
     x_velocity = -x_velocity;
     if (ball_y - yr < 8)
