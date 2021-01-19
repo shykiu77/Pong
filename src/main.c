@@ -20,8 +20,8 @@
 
 #define TILE_SIZE 8
 
-WORD x_velocity;
-WORD y_velocity;
+WORD x_velocity=0;
+WORD y_velocity=0;
 
 WORD pad; //variavel para captar os inputs do gameboy
 //WORD gameover = 1;
@@ -38,8 +38,9 @@ WORD posicaotopo = 0;
 WORD posicaomeio1 = 0;
 WORD posicaomeio2 = 0;
 WORD posicaobaixo = 0;
-WORD i = 2;      //velocidade de movimentacao barra da esquerda
+
 WORD action = 3; //1 = barra p/ cima ; 0 = barra p/ baixo ; 3 = nenhuma acao
+WORD i = 2;      //velocidade de movimentacao das duas barras
 
 //propriedades da barra da direita
 WORD posicaotoporight = 0;
@@ -87,13 +88,13 @@ void mark_score_computer(){
 }
 void move_bar()
 {
-  if (posicaobaixo <= 0 && action == 0) //pad p/ baixo mas ja esta no limite inferior da tela
+  if (posicaobaixo - 2 <= 0 && action == 0) //pad p/ baixo mas ja esta no limite inferior da tela
   {
     action = 3;
     return;
   }
 
-  if (posicaobaixo > 0 && action == 0) //pad p/ baixo e nao esta no limite inferior da tela
+  if (posicaobaixo - 2 > 0 && action == 0) //pad p/ baixo e nao esta no limite inferior da tela
   {
     posicaotopo = yl + i;
     posicaomeio1 = yl + TILE_SIZE + i;
@@ -101,20 +102,20 @@ void move_bar()
     posicaobaixo = yl + 3 * TILE_SIZE + i;
     yl += i;
 
-    move_sprite(L_BAR, TILE_SIZE, posicaotopo);
-    move_sprite(L_BAR + 1, TILE_SIZE, posicaomeio1);
-    move_sprite(L_BAR + 2, TILE_SIZE, posicaomeio2);
-    move_sprite(L_BAR + 3, TILE_SIZE, posicaobaixo);
+    move_sprite(L_BAR, LEFT_LIMIT, posicaotopo);
+    move_sprite(L_BAR + 1, LEFT_LIMIT, posicaomeio1);
+    move_sprite(L_BAR + 2, LEFT_LIMIT, posicaomeio2);
+    move_sprite(L_BAR + 3, LEFT_LIMIT, posicaobaixo);
 
     action = 3;
   }
-  if (posicaotopo >= SCREENHEIGHT && action == 1) //pad p/ cima mas ja esta no limite superior da tela
+  if (posicaotopo + 2 >= UP_LIMIT && action == 1) //pad p/ cima mas ja esta no limite superior da tela
   {
     action = 3;
     return;
   }
 
-  if (posicaotopo < SCREENHEIGHT && action == 1) //pad p/ cima e nao esta no limite superior na tela
+  if (posicaotopo + 2 < UP_LIMIT && action == 1) //pad p/ cima e nao esta no limite superior na tela
   {
     posicaotopo = yl - i;
     posicaomeio1 = yl + TILE_SIZE - i;
@@ -122,10 +123,10 @@ void move_bar()
     posicaobaixo = yl + 3 * TILE_SIZE - i;
     yl -= i;
 
-    move_sprite(L_BAR, TILE_SIZE, posicaotopo);
-    move_sprite(L_BAR + 1, TILE_SIZE, posicaomeio1);
-    move_sprite(L_BAR + 2, TILE_SIZE, posicaomeio2);
-    move_sprite(L_BAR + 3, TILE_SIZE, posicaobaixo);
+    move_sprite(L_BAR, LEFT_LIMIT, posicaotopo);
+    move_sprite(L_BAR + 1, LEFT_LIMIT, posicaomeio1);
+    move_sprite(L_BAR + 2, LEFT_LIMIT, posicaomeio2);
+    move_sprite(L_BAR + 3, LEFT_LIMIT, posicaobaixo);
 
     action = 3;
   }
@@ -159,7 +160,7 @@ void check_collision()
   }
 
   // Bola toca na parte superior ou inferior da tela
-  if (ball_y - RADIUS_BALL <= 0 || ball_y + RADIUS_BALL >= SCREENHEIGHT)
+  if (ball_y - RADIUS_BALL <= 0 || ball_y + RADIUS_BALL >= UP_LIMIT)
   {
     y_velocity *= -1;
     return;
@@ -197,10 +198,10 @@ void ia_bar()
   if (x_velocity < 0)
   { //bola indo p/ esquerda
 
-    move_sprite(R_BAR, SCREENWIDTH, yr);
-    move_sprite(R_BAR + 1, SCREENWIDTH, yr + TILE_SIZE);
-    move_sprite(R_BAR + 2, SCREENWIDTH, yr + 2 * TILE_SIZE);
-    move_sprite(R_BAR + 3, SCREENWIDTH, yr + 3 * TILE_SIZE);
+    move_sprite(R_BAR, RIGHT_LIMIT, yr);
+    move_sprite(R_BAR + 1, RIGHT_LIMIT, yr + TILE_SIZE);
+    move_sprite(R_BAR + 2, RIGHT_LIMIT, yr + 2 * TILE_SIZE);
+    move_sprite(R_BAR + 3, RIGHT_LIMIT, yr + 3 * TILE_SIZE);
     //salvando as posicoes da barra da direita
     posicaotoporight = yr;
     posicaomeio1right = yr + TILE_SIZE;
@@ -221,10 +222,10 @@ void ia_bar()
         posicaobaixoright = yr + 3 * TILE_SIZE + i;
         yr += i;
 
-        move_sprite(R_BAR, SCREENWIDTH, posicaotoporight);
-        move_sprite(R_BAR + 1, SCREENWIDTH, posicaomeio1right);
-        move_sprite(R_BAR + 2, SCREENWIDTH, posicaomeio2right);
-        move_sprite(R_BAR + 3, SCREENWIDTH, posicaobaixoright);
+        move_sprite(R_BAR, RIGHT_LIMIT, posicaotoporight);
+        move_sprite(R_BAR + 1, RIGHT_LIMIT, posicaomeio1right);
+        move_sprite(R_BAR + 2, RIGHT_LIMIT, posicaomeio2right);
+        move_sprite(R_BAR + 3, RIGHT_LIMIT, posicaobaixoright);
       }
       else
       {
@@ -234,10 +235,10 @@ void ia_bar()
         posicaobaixoright = yr + 3 * TILE_SIZE - i;
         yr -= i;
 
-        move_sprite(R_BAR, SCREENWIDTH, posicaotoporight);
-        move_sprite(R_BAR + 1, SCREENWIDTH, posicaomeio1right);
-        move_sprite(R_BAR + 2, SCREENWIDTH, posicaomeio2right);
-        move_sprite(R_BAR + 3, SCREENWIDTH, posicaobaixoright);
+        move_sprite(R_BAR, RIGHT_LIMIT, posicaotoporight);
+        move_sprite(R_BAR + 1, RIGHT_LIMIT, posicaomeio1right);
+        move_sprite(R_BAR + 2, RIGHT_LIMIT, posicaomeio2right);
+        move_sprite(R_BAR + 3, RIGHT_LIMIT, posicaobaixoright);
       }
     }
     if (y_velocity < 0)
@@ -251,10 +252,10 @@ void ia_bar()
         posicaobaixoright = yr + 3 * TILE_SIZE - i;
         yr -= i;
 
-        move_sprite(R_BAR, SCREENWIDTH, posicaotoporight);
-        move_sprite(R_BAR + 1, SCREENWIDTH, posicaomeio1right);
-        move_sprite(R_BAR + 2, SCREENWIDTH, posicaomeio2right);
-        move_sprite(R_BAR + 3, SCREENWIDTH, posicaobaixoright);
+        move_sprite(R_BAR, RIGHT_LIMIT, posicaotoporight);
+        move_sprite(R_BAR + 1, RIGHT_LIMIT, posicaomeio1right);
+        move_sprite(R_BAR + 2, RIGHT_LIMIT, posicaomeio2right);
+        move_sprite(R_BAR + 3, RIGHT_LIMIT, posicaobaixoright);
       }
       else
       {
@@ -264,18 +265,18 @@ void ia_bar()
         posicaobaixoright = yr + 3 * TILE_SIZE + i;
         yr += i;
 
-        move_sprite(R_BAR, SCREENWIDTH, posicaotoporight);
-        move_sprite(R_BAR + 1, SCREENWIDTH, posicaomeio1right);
-        move_sprite(R_BAR + 2, SCREENWIDTH, posicaomeio2right);
-        move_sprite(R_BAR + 3, SCREENWIDTH, posicaobaixoright);
+        move_sprite(R_BAR, RIGHT_LIMIT, posicaotoporight);
+        move_sprite(R_BAR + 1, RIGHT_LIMIT, posicaomeio1right);
+        move_sprite(R_BAR + 2, RIGHT_LIMIT, posicaomeio2right);
+        move_sprite(R_BAR + 3, RIGHT_LIMIT, posicaobaixoright);
       }
     }
     if (y_velocity == 0)
     {
-      move_sprite(R_BAR, SCREENWIDTH, yr);
-      move_sprite(R_BAR + 1, SCREENWIDTH, yr + TILE_SIZE);
-      move_sprite(R_BAR + 2, SCREENWIDTH, yr + 2 * TILE_SIZE);
-      move_sprite(R_BAR + 3, SCREENWIDTH, yr + 3 * TILE_SIZE);
+      move_sprite(R_BAR, RIGHT_LIMIT, yr);
+      move_sprite(R_BAR + 1, RIGHT_LIMIT, yr + TILE_SIZE);
+      move_sprite(R_BAR + 2, RIGHT_LIMIT, yr + 2 * TILE_SIZE);
+      move_sprite(R_BAR + 3, RIGHT_LIMIT, yr + 3 * TILE_SIZE);
       //salvando as posicoes da barra da direita
       posicaotoporight = yr;
       posicaomeio1right = yr + TILE_SIZE;
@@ -388,7 +389,7 @@ void main()
       move_bar();
     }
     
-    //ia_bar();
+    ia_bar();
 
     update_ball();
     check_collision();
