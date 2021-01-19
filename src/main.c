@@ -61,8 +61,8 @@ WORD score_computer = 0;
 
 WORD LEFT_LIMIT = 2*TILE_SIZE;
 WORD RIGHT_LIMIT = 19*TILE_SIZE;
-WORD UP_LIMIT = 15*TILE_SIZE;
-WORD DOWN_LIMITE = 2*TILE_SIZE;
+WORD UP_LIMIT = 4*TILE_SIZE;
+WORD DOWN_LIMIT = 18*TILE_SIZE;
 
 WORD fix = 2;
 
@@ -88,13 +88,13 @@ void mark_score_computer(){
 }
 void move_bar()
 {
-  if (posicaobaixo - 2 <= 0 && action == 0) //pad p/ baixo mas ja esta no limite inferior da tela
+  if (posicaobaixo >= DOWN_LIMIT && action == 0) //pad p/ baixo mas ja esta no limite inferior da tela
   {
     action = 3;
     return;
   }
 
-  if (posicaobaixo - 2 > 0 && action == 0) //pad p/ baixo e nao esta no limite inferior da tela
+  if (posicaobaixo < DOWN_LIMIT && action == 0) //pad p/ baixo e nao esta no limite inferior da tela
   {
     posicaotopo = yl + i;
     posicaomeio1 = yl + TILE_SIZE + i;
@@ -109,13 +109,13 @@ void move_bar()
 
     action = 3;
   }
-  if (posicaotopo + 2 >= UP_LIMIT && action == 1) //pad p/ cima mas ja esta no limite superior da tela
+  if (posicaotopo <= UP_LIMIT && action == 1) //pad p/ cima mas ja esta no limite superior da tela
   {
     action = 3;
     return;
   }
 
-  if (posicaotopo + 2 < UP_LIMIT && action == 1) //pad p/ cima e nao esta no limite superior na tela
+  if (posicaotopo  > UP_LIMIT && action == 1) //pad p/ cima e nao esta no limite superior na tela
   {
     posicaotopo = yl - i;
     posicaomeio1 = yl + TILE_SIZE - i;
@@ -160,7 +160,7 @@ void check_collision()
   }
 
   // Bola toca na parte superior ou inferior da tela
-  if (ball_y - RADIUS_BALL <= 0 || ball_y + RADIUS_BALL >= UP_LIMIT)
+  if (ball_y <= UP_LIMIT || ball_y >= DOWN_LIMIT)
   {
     y_velocity *= -1;
     return;
@@ -357,7 +357,7 @@ void main()
   set_props();
   move_sprite(L_SCORE,3*TILE_SIZE,2*TILE_SIZE);
   move_sprite(R_SCORE,17*TILE_SIZE,2*TILE_SIZE);
-  
+
   SHOW_SPRITES;
   while (1)
   {
