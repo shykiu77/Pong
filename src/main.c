@@ -167,7 +167,7 @@ void check_collision()
   }
 
   // Bola toca na barra esquerda
-  if (ball_x - RADIUS_BALL == LEFT_LIMIT && ball_y >= yl - RADIUS_BALL && ball_y <= yl + 4 * TILE_SIZE + RADIUS_BALL)
+  if (ball_x - RADIUS_BALL <= LEFT_LIMIT && ball_y >= yl - RADIUS_BALL && ball_y <= yl + 4 * TILE_SIZE + RADIUS_BALL)
   {
     x_velocity = -x_velocity;
     if (ball_y - yl < 8)
@@ -180,7 +180,7 @@ void check_collision()
   }
 
   // Bola toca na barra direita
-  if (ball_x + RADIUS_BALL == RIGHT_LIMIT && ball_y >= yr - RADIUS_BALL && ball_y <= yr + 4 * TILE_SIZE + RADIUS_BALL)
+  if (ball_x + RADIUS_BALL >= RIGHT_LIMIT && ball_y >= yr - RADIUS_BALL && ball_y <= yr + 4 * TILE_SIZE + RADIUS_BALL)
   {
     x_velocity = -x_velocity;
     if (ball_y - yr < 8)
@@ -387,41 +387,46 @@ void main()
   SHOW_SPRITES;
   while (1)
   {
-    if (reinicia == 1)
-    { //quando o jogo reiniciar por pontuação
-      yl = SCREENHEIGHT / 2 - TILE_SIZE;
-      yr = SCREENHEIGHT / 2 - TILE_SIZE;
-      set_props();
-      //randomizacao removida momentaneamente
-      x_velocity = 2;
-      y_velocity = 0;
-      reinicia = 0;
+    if(score_player== 5 || score_computer == 5){
+      
     }
-    if (reinicia == 2)
-    { //quando o jogo roda a primeira vez
-      x_velocity = 2;
-      y_velocity = 0;
-      reinicia = 0;
-    }
-    pad = joypad();
-    if (pad & J_UP)
-    {
-      action = 1;
-      move_bar();
-    }
-    if (pad & J_DOWN)
-    {
-      action = 0;
-      move_bar();
-    }
-    
-    ia_bar();
+    else{
+      if (reinicia == 1)
+      { //quando o jogo reiniciar por pontuação
+        yl = SCREENHEIGHT / 2 - TILE_SIZE;
+        yr = SCREENHEIGHT / 2 - TILE_SIZE;
+        set_props();
+        //randomizacao removida momentaneamente
+        x_velocity = 2;
+        y_velocity = 0;
+        reinicia = 0;
+      }
+      if (reinicia == 2)
+      { //quando o jogo roda a primeira vez
+        x_velocity = 2;
+        y_velocity = 0;
+        reinicia = 0;
+      }
+      pad = joypad();
+      if (pad & J_UP)
+      {
+        action = 1;
+        move_bar();
+      }
+      if (pad & J_DOWN)
+      {
+        action = 0;
+        move_bar();
+      }
+      
+      ia_bar();
 
-    update_ball();
-    check_collision();
+      update_ball();
+      check_collision();
 
-    wait_vbl_done();
-    delay(20);
-    //gameover = 0;
+      wait_vbl_done();
+      delay(20);
+      //gameover = 0;
+    }
   }
 }
