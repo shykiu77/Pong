@@ -243,13 +243,8 @@ void main()
   set_bkg_tiles(0, 0, 20, 18, map);
   SHOW_BKG;
 
-  int start = FALSE;
-  while (!start)
-  {
-    pad = joypad();
-    if (pad)
-      start = TRUE;
-  }
+  int side = wait_for_connection();
+ 
   set_bkg_data(0, 14, gray);
   set_bkg_tiles(0, 0, 20, 18, map2);
   SHOW_BKG;
@@ -276,12 +271,14 @@ void main()
   move_sprite(R_SCORE,17*TILE_SIZE,2*TILE_SIZE);
 
   SHOW_SPRITES;
+  
   while (1)
   {
     if(score_left== 5 || score_right == 5){
       
     }
     else{
+      receive_byte();
       if (reinicia == 1)
       { //quando o jogo reiniciar por pontuação
         yl = SCREENHEIGHT / 2 - TILE_SIZE;
@@ -301,17 +298,24 @@ void main()
       pad = joypad();
       if (pad & J_UP)
       {
-        move_bar(0,1);
+        move_bar(side,1);
+        send_action(1);
       }
       if (pad & J_DOWN)
       {
-        move_bar(0,0);
+        move_bar(side,0);
+        send_action(0);
       }
+      delay(10);
+      
+      move_bar(!side,validade_data());
+      _io_in = 3;
+
       update_ball();
       check_collision();
 
       wait_vbl_done();
-      delay(20);
+      delay(10);
       //gameover = 0;
     }
   }
