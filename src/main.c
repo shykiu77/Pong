@@ -6,7 +6,7 @@
 #include "../assets/map2.c"
 #include "../assets/gray.c"
 #include "../assets/score.c"
-
+#include "./multiplayer.c"
 #include <gb/drawing.h>
 #include <stdio.h>
 //#include <stdlib.h>  //uso da funcao rand
@@ -33,20 +33,11 @@ WORD yr = SCREENHEIGHT / 2 - TILE_SIZE; //y da barra da direita
 WORD ball_x = SCREENWIDTH / 2;
 WORD ball_y = SCREENHEIGHT / 2;
 
-//propriedades da barra da esquerda
-WORD posicaotopo = 0;
-WORD posicaomeio1 = 0;
-WORD posicaomeio2 = 0;
-WORD posicaobaixo = 0;
 
-WORD action = 3; //1 = barra p/ cima ; 0 = barra p/ baixo ; 3 = nenhuma acao
-WORD i = 1;      //velocidade de movimentacao das duas barras
 
-//propriedades da barra da direita
-WORD posicaotoporight = 0;
-WORD posicaomeio1right = 0;
-WORD posicaomeio2right = 0;
-WORD posicaobaixoright = 0;
+WORD i = 2;      //velocidade de movimentacao das duas barras
+
+
 
 //controle de reinicio da partida caso alguem pontue
 WORD reinicia = 2; // 0 = false, 1 = true, 2 = null
@@ -56,8 +47,8 @@ WORD reinicia = 2; // 0 = false, 1 = true, 2 = null
 WORD RADIUS_BALL = 4;
 
 //players
-WORD score_player = 0;
-WORD score_computer = 0;
+WORD score_left = 0;
+WORD score_right = 0;
 
 WORD LEFT_LIMIT = 2*TILE_SIZE;
 WORD RIGHT_LIMIT = 19*TILE_SIZE;
@@ -78,16 +69,34 @@ void hide(int sprite)
   move_sprite(sprite, -10, -10);
 }
 
-void mark_score_player(){
-  hide(L_SCORE+score_player-1);
-  move_sprite(L_SCORE+score_player,3*TILE_SIZE,2*TILE_SIZE);
+void mark_score_left(){
+  hide(L_SCORE+score_left-1);
+  move_sprite(L_SCORE+score_left,3*TILE_SIZE,2*TILE_SIZE);
 }
-void mark_score_computer(){
-  hide(R_SCORE+score_computer-1);
-  move_sprite(R_SCORE+score_computer,17*TILE_SIZE,2*TILE_SIZE);
+void mark_score_right(){
+  hide(R_SCORE+score_right-1);
+  move_sprite(R_SCORE+score_right,17*TILE_SIZE,2*TILE_SIZE);
 }
-void move_bar()
-{
+//L_or_R: 0 = left, 1 = right.
+//action: 1 = barra para cima ; 0 = barra para baixo ; 3 = nenhuma ação.
+void move_bar(int L_or_R,int action){
+  int posicaotopo,posicaomeio1,posicaomeio2,posicaobaixo,sprite,lado;
+  if(L_or_R == 0){
+    posicaotopo = yl;
+    posicaomeio1 = yl+TILE_SIZE;
+    posicaomeio2 = yl+2*TILE_SIZE;
+    posicaobaixo = yl+3*TILE_SIZE;
+    sprite = L_BAR;
+    lado = LEFT_LIMIT;
+  }
+  else{
+    posicaotopo = yr;
+    posicaomeio1 = yr+TILE_SIZE;
+    posicaomeio2 = yr+2*TILE_SIZE;
+    posicaobaixo = yr+3*TILE_SIZE;
+    sprite = R_BAR;
+    lado = RIGHT_LIMIT;
+  }
   if (posicaobaixo >= DOWN_LIMIT && action == 0) //pad p/ baixo mas ja esta no limite inferior da tela
   {
     action = 3;
@@ -96,16 +105,22 @@ void move_bar()
 
   if (posicaobaixo < DOWN_LIMIT && action == 0) //pad p/ baixo e nao esta no limite inferior da tela
   {
-    posicaotopo = yl + i;
-    posicaomeio1 = yl + TILE_SIZE + i;
-    posicaomeio2 = yl + 2 * TILE_SIZE + i;
-    posicaobaixo = yl + 3 * TILE_SIZE + i;
-    yl += i;
+    posicaotopo  += i;
+    posicaomeio1 += i;
+    posicaomeio2 += i;
+    posicaobaixo += i;
+    if(L_or_R == 0)
+      yl += i;
+    else
+      yr += i;
+      
+    
+    
 
-    move_sprite(L_BAR, LEFT_LIMIT, posicaotopo);
-    move_sprite(L_BAR + 1, LEFT_LIMIT, posicaomeio1);
-    move_sprite(L_BAR + 2, LEFT_LIMIT, posicaomeio2);
-    move_sprite(L_BAR + 3, LEFT_LIMIT, posicaobaixo);
+    move_sprite(sprite, lado, posicaotopo);
+    move_sprite(sprite + 1, lado, posicaomeio1);
+    move_sprite(sprite + 2, lado, posicaomeio2);
+    move_sprite(sprite + 3, lado, posicaobaixo);
 
     action = 3;
   }
@@ -117,16 +132,19 @@ void move_bar()
 
   if (posicaotopo  > UP_LIMIT && action == 1) //pad p/ cima e nao esta no limite superior na tela
   {
-    posicaotopo = yl - i;
-    posicaomeio1 = yl + TILE_SIZE - i;
-    posicaomeio2 = yl + 2 * TILE_SIZE - i;
-    posicaobaixo = yl + 3 * TILE_SIZE - i;
-    yl -= i;
-
-    move_sprite(L_BAR, LEFT_LIMIT, posicaotopo);
-    move_sprite(L_BAR + 1, LEFT_LIMIT, posicaomeio1);
-    move_sprite(L_BAR + 2, LEFT_LIMIT, posicaomeio2);
-    move_sprite(L_BAR + 3, LEFT_LIMIT, posicaobaixo);
+    posicaotopo  += - i;
+    posicaomeio1 += - i;
+    posicaomeio2 += - i;
+    posicaobaixo += - i;
+    if(L_or_R == 0)
+      yl += -i;
+    else
+      yr += -i;
+    
+    move_sprite(sprite, lado, posicaotopo);
+    move_sprite(sprite + 1, lado, posicaomeio1);
+    move_sprite(sprite + 2, lado, posicaomeio2);
+    move_sprite(sprite + 3, lado, posicaobaixo);
 
     action = 3;
   }
@@ -140,9 +158,9 @@ void check_collision()
   // Bola toca na parede da IA
   if (ball_x >= RIGHT_LIMIT)
   {
-    score_player++;
+    score_left++;
     if(fix < 0)
-      mark_score_player();
+      mark_score_left();
     reinicia = 1;
     return;
   }
@@ -150,9 +168,9 @@ void check_collision()
   // Bola toca na parede do jogador
   if (ball_x <= LEFT_LIMIT)
   {
-    score_computer++;
+    score_right++;
     if(fix < 0)
-      mark_score_computer();
+      mark_score_right();
     else 
       fix--;
     reinicia = 1;
@@ -193,124 +211,7 @@ void check_collision()
   }
 }
 
-void ia_bar()
-{
-  if (x_velocity < 0)
-  { //bola indo p/ esquerda
 
-    move_sprite(R_BAR, RIGHT_LIMIT, yr);
-    move_sprite(R_BAR + 1, RIGHT_LIMIT, yr + TILE_SIZE);
-    move_sprite(R_BAR + 2, RIGHT_LIMIT, yr + 2 * TILE_SIZE);
-    move_sprite(R_BAR + 3, RIGHT_LIMIT, yr + 3 * TILE_SIZE);
-    //salvando as posicoes da barra da direita
-    posicaotoporight = yr;
-    posicaomeio1right = yr + TILE_SIZE;
-    posicaomeio2right = yr + 2 * TILE_SIZE;
-    posicaobaixoright = yr + 3 * TILE_SIZE;
-  }
-  else
-  { //bola indo p/ direita
-
-    if (y_velocity > 0)
-    { //bola indo p/ baixo
-
-      if (ball_y > posicaomeio1right)
-      {
-        if (posicaobaixoright < DOWN_LIMIT)
-        {
-          posicaotoporight = yr + i;
-          posicaomeio1right = yr + TILE_SIZE + i;
-          posicaomeio2right = yr + 2 * TILE_SIZE + i;
-          posicaobaixoright = yr + 3 * TILE_SIZE + i;
-          yr += i;
-
-          move_sprite(R_BAR, RIGHT_LIMIT, posicaotoporight);
-          move_sprite(R_BAR + 1, RIGHT_LIMIT, posicaomeio1right);
-          move_sprite(R_BAR + 2, RIGHT_LIMIT, posicaomeio2right);
-          move_sprite(R_BAR + 3, RIGHT_LIMIT, posicaobaixoright);
-        }else
-        {
-          return;
-        }
-        
-      }
-      if(ball_y <= posicaomeio1right)
-      {
-        if (posicaotoporight > UP_LIMIT)
-        {
-          posicaotoporight = yr - i;
-          posicaomeio1right = yr + TILE_SIZE - i;
-          posicaomeio2right = yr + 2 * TILE_SIZE - i;
-          posicaobaixoright = yr + 3 * TILE_SIZE - i;
-          yr -= i;
-
-          move_sprite(R_BAR, RIGHT_LIMIT, posicaotoporight);
-          move_sprite(R_BAR + 1, RIGHT_LIMIT, posicaomeio1right);
-          move_sprite(R_BAR + 2, RIGHT_LIMIT, posicaomeio2right);
-          move_sprite(R_BAR + 3, RIGHT_LIMIT, posicaobaixoright);
-        }else
-        {
-          return;
-        }
-        
-      }
-    }
-    if (y_velocity < 0)
-    { //bola indo p/ cima
-
-      if (ball_y < posicaomeio1right)
-      {
-        if (posicaotoporight > UP_LIMIT){
-        posicaotoporight = yr - i;
-        posicaomeio1right = yr + TILE_SIZE - i;
-        posicaomeio2right = yr + 2 * TILE_SIZE - i;
-        posicaobaixoright = yr + 3 * TILE_SIZE - i;
-        yr -= i;
-
-        move_sprite(R_BAR, RIGHT_LIMIT, posicaotoporight);
-        move_sprite(R_BAR + 1, RIGHT_LIMIT, posicaomeio1right);
-        move_sprite(R_BAR + 2, RIGHT_LIMIT, posicaomeio2right);
-        move_sprite(R_BAR + 3, RIGHT_LIMIT, posicaobaixoright);
-        }else
-        {
-          return;
-        }
-        
-      }
-      if(ball_y >= posicaomeio1right)
-      {
-        if (posicaobaixoright < DOWN_LIMIT){
-        posicaotoporight = yr + i;
-        posicaomeio1right = yr + TILE_SIZE + i;
-        posicaomeio2right = yr + 2 * TILE_SIZE + i;
-        posicaobaixoright = yr + 3 * TILE_SIZE + i;
-        yr += i;
-
-        move_sprite(R_BAR, RIGHT_LIMIT, posicaotoporight);
-        move_sprite(R_BAR + 1, RIGHT_LIMIT, posicaomeio1right);
-        move_sprite(R_BAR + 2, RIGHT_LIMIT, posicaomeio2right);
-        move_sprite(R_BAR + 3, RIGHT_LIMIT, posicaobaixoright);
-        }else
-        {
-          return;
-        }
-        
-      }
-    }
-    if (y_velocity == 0)
-    {
-      move_sprite(R_BAR, RIGHT_LIMIT, yr);
-      move_sprite(R_BAR + 1, RIGHT_LIMIT, yr + TILE_SIZE);
-      move_sprite(R_BAR + 2, RIGHT_LIMIT, yr + 2 * TILE_SIZE);
-      move_sprite(R_BAR + 3, RIGHT_LIMIT, yr + 3 * TILE_SIZE);
-      //salvando as posicoes da barra da direita
-      posicaotoporight = yr;
-      posicaomeio1right = yr + TILE_SIZE;
-      posicaomeio2right = yr + 2 * TILE_SIZE;
-      posicaobaixoright = yr + 3 * TILE_SIZE;
-    }
-  }
-}
 
 void set_props()
 {
@@ -323,23 +224,12 @@ void set_props()
   move_sprite(L_BAR + 1, LEFT_LIMIT, yl + TILE_SIZE);
   move_sprite(L_BAR + 2, LEFT_LIMIT, yl + 2 * TILE_SIZE);
   move_sprite(L_BAR + 3, LEFT_LIMIT, yl + 3 * TILE_SIZE);
-  //salvando as posicoes da barra da esquerda
-  posicaotopo = yl;
-  posicaomeio1 = yl + TILE_SIZE;
-  posicaomeio2 = yl + 2 * TILE_SIZE;
-  posicaobaixo = yl + 3 * TILE_SIZE;
 
   move_sprite(R_BAR, RIGHT_LIMIT, yr);
   move_sprite(R_BAR + 1, RIGHT_LIMIT, yr + TILE_SIZE);
   move_sprite(R_BAR + 2, RIGHT_LIMIT, yr + 2 * TILE_SIZE);
   move_sprite(R_BAR + 3, RIGHT_LIMIT, yr + 3 * TILE_SIZE);
-  //salvando as posicoes da barra da direita
-  posicaotoporight = yr;
-  posicaomeio1right = yr + TILE_SIZE;
-  posicaomeio2right = yr + 2 * TILE_SIZE;
-  posicaobaixoright = yr + 3 * TILE_SIZE;
 }
-
 
 void loadMenu()
 {
@@ -347,6 +237,7 @@ void loadMenu()
 
 void main()
 {
+  
   set_bkg_data(0, 6, font);
 
   set_bkg_tiles(0, 0, 20, 18, map);
@@ -387,7 +278,7 @@ void main()
   SHOW_SPRITES;
   while (1)
   {
-    if(score_player== 5 || score_computer == 5){
+    if(score_left== 5 || score_right == 5){
       
     }
     else{
@@ -410,17 +301,12 @@ void main()
       pad = joypad();
       if (pad & J_UP)
       {
-        action = 1;
-        move_bar();
+        move_bar(0,1);
       }
       if (pad & J_DOWN)
       {
-        action = 0;
-        move_bar();
+        move_bar(0,0);
       }
-      
-      ia_bar();
-
       update_ball();
       check_collision();
 
