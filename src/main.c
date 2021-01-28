@@ -158,9 +158,11 @@ void check_collision()
   // Bola toca na parede da IA
   if (ball_x >= RIGHT_LIMIT)
   {
-    score_left++;
-    if(fix < 0)
+    if(fix < 0){
+      score_left++;
       mark_score_left();
+      delay(300);
+    }
     reinicia = 1;
     return;
   }
@@ -168,9 +170,12 @@ void check_collision()
   // Bola toca na parede do jogador
   if (ball_x <= LEFT_LIMIT)
   {
-    score_right++;
-    if(fix < 0)
+    
+    if(fix < 0){
+      score_left++;
       mark_score_right();
+      delay(300);
+    }
     else 
       fix--;
     reinicia = 1;
