@@ -193,9 +193,9 @@ void check_collision()
   if (ball_x - RADIUS_BALL <= LEFT_LIMIT && ball_y >= yl - RADIUS_BALL && ball_y <= yl + 4 * TILE_SIZE + RADIUS_BALL)
   {
     x_velocity = -x_velocity;
-    if (ball_y - yl < 5)
+    if (ball_y - yl < 4)
       y_velocity = -1;
-    else if (ball_y - yl > 16){
+    else if (ball_y - yl > 24){
       y_velocity = 1;
     }
     else{
@@ -208,9 +208,9 @@ void check_collision()
   if (ball_x + RADIUS_BALL >= RIGHT_LIMIT && ball_y >= yr - RADIUS_BALL && ball_y <= yr + 4 * TILE_SIZE + RADIUS_BALL)
   {
     x_velocity = -x_velocity;
-    if (ball_y - yr < 5)
+    if (ball_y - yr < 4)
       y_velocity = -1;
-    else if (ball_y - yr > 16){
+    else if (ball_y - yr > 24){
       y_velocity = 1;
     }
     else{
