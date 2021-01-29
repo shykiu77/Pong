@@ -195,7 +195,7 @@ void check_collision()
     x_velocity = -x_velocity;
     if (ball_y - yl < 4)
       y_velocity = -1;
-    else if (ball_y - yl > 24){
+    else if (ball_y - yl > 20){
       y_velocity = 1;
     }
     else{
@@ -210,7 +210,7 @@ void check_collision()
     x_velocity = -x_velocity;
     if (ball_y - yr < 4)
       y_velocity = -1;
-    else if (ball_y - yr > 24){
+    else if (ball_y - yr > 20){
       y_velocity = 1;
     }
     else{
