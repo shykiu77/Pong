@@ -1,6 +1,6 @@
 /*
 
- EXPORT.H
+ BALL.H
 
  Include File.
 
@@ -28,4 +28,4 @@
 /* Start of tile array. */
 extern unsigned char ball[];
 
-/* End of EXPORT.H */
+/* End of BALL.H */
