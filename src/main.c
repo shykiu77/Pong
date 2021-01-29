@@ -7,6 +7,7 @@
 #include "../assets/gray.c"
 #include "../assets/score.c"
 #include "./multiplayer.c"
+#include "./ia.c"
 #include <gb/drawing.h>
 #include <stdio.h>
 //#include <stdlib.h>  //uso da funcao rand
@@ -69,6 +70,8 @@ void hide(int sprite)
   move_sprite(sprite, -10, -10);
 }
 
+
+
 void mark_score_left(){
   hide(L_SCORE+score_left-1);
   move_sprite(L_SCORE+score_left,3*TILE_SIZE,2*TILE_SIZE);
@@ -114,9 +117,6 @@ void move_bar(int L_or_R,int action){
     else
       yr += i;
       
-    
-    
-
     move_sprite(sprite, lado, posicaotopo);
     move_sprite(sprite + 1, lado, posicaomeio1);
     move_sprite(sprite + 2, lado, posicaomeio2);
@@ -320,6 +320,7 @@ void main()
       _io_in = 3;
 
       update_ball();
+      //ia_bar();
       check_collision();
 
       wait_vbl_done();
