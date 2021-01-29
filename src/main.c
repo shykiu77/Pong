@@ -316,11 +316,6 @@ void main()
         send_action(0);
       }
       delay(10);
-<<<<<<< HEAD
-=======
-
-      
->>>>>>> 7bd6f006e8ac8ad98d230c4a5fbfd128920d7c55
       move_bar(!side,validade_data());
       _io_in = 3;
 
