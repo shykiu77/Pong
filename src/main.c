@@ -193,9 +193,8 @@ void check_collision()
   if (ball_x - RADIUS_BALL <= LEFT_LIMIT && ball_y >= yl - RADIUS_BALL && ball_y <= yl + 4 * TILE_SIZE + RADIUS_BALL)
   {
     x_velocity = -x_velocity;
-    if (ball_y - yl < 5){
+    if (ball_y - yl < 5)
       y_velocity = -1;
-    }
     else if (ball_y - yl > 16){
       y_velocity = 1;
     }
@@ -209,9 +208,8 @@ void check_collision()
   if (ball_x + RADIUS_BALL >= RIGHT_LIMIT && ball_y >= yr - RADIUS_BALL && ball_y <= yr + 4 * TILE_SIZE + RADIUS_BALL)
   {
     x_velocity = -x_velocity;
-    if (ball_y - yr < 5){
+    if (ball_y - yr < 5)
       y_velocity = -1;
-    }
     else if (ball_y - yr > 16){
       y_velocity = 1;
     }
@@ -318,6 +316,11 @@ void main()
         send_action(0);
       }
       delay(10);
+<<<<<<< HEAD
+=======
+
+      
+>>>>>>> 7bd6f006e8ac8ad98d230c4a5fbfd128920d7c55
       move_bar(!side,validade_data());
       _io_in = 3;
 
