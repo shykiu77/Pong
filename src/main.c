@@ -34,11 +34,7 @@ WORD yr = SCREENHEIGHT / 2 - TILE_SIZE; //y da barra da direita
 WORD ball_x = SCREENWIDTH / 2;
 WORD ball_y = SCREENHEIGHT / 2;
 
-
-
 WORD i = 2;      //velocidade de movimentacao das duas barras
-
-
 
 //controle de reinicio da partida caso alguem pontue
 WORD reinicia = 2; // 0 = false, 1 = true, 2 = null
@@ -185,6 +181,12 @@ void check_collision()
   // Bola toca na parte superior ou inferior da tela
   if (ball_y <= UP_LIMIT || ball_y >= DOWN_LIMIT)
   {
+    NR51_REG = 0x11;
+    NR10_REG = 0X00;
+    NR11_REG = 0X81;
+    NR12_REG = 0X43 ;
+    NR13_REG = 0XF2;
+    NR14_REG = 0X85 ;
     y_velocity *= -1;
     return;
   }
@@ -193,6 +195,12 @@ void check_collision()
   if (ball_x - RADIUS_BALL <= LEFT_LIMIT && ball_y >= yl - RADIUS_BALL && ball_y <= yl + 4 * TILE_SIZE + RADIUS_BALL)
   {
     x_velocity = -x_velocity;
+      NR51_REG = 0x10;
+      NR10_REG = 0X00;
+      NR11_REG = 0X81;
+      NR12_REG = 0X43 ;
+      NR13_REG = 0XF2;
+      NR14_REG = 0X85 ;
     if (ball_y - yl < 4)
       y_velocity = -1;
     else if (ball_y - yl > 24){
@@ -208,6 +216,13 @@ void check_collision()
   if (ball_x + RADIUS_BALL >= RIGHT_LIMIT && ball_y >= yr - RADIUS_BALL && ball_y <= yr + 4 * TILE_SIZE + RADIUS_BALL)
   {
     x_velocity = -x_velocity;
+      
+      NR51_REG = 0x01;
+      NR10_REG = 0X00;
+      NR11_REG = 0X81;
+      NR12_REG = 0X43 ;
+      NR13_REG = 0XF2;
+      NR14_REG = 0X85 ;
     if (ball_y - yr < 4)
       y_velocity = -1;
     else if (ball_y - yr > 24){
@@ -283,10 +298,18 @@ void main()
   
   while (1)
   {
+
     if(score_left== 5 || score_right == 5){
       
     }
     else{
+      
+      NR52_REG = 0x80;  //habilita o som
+      NR50_REG = 0x77; //volume no maximo
+      //NR51_REG = 0x11;  //som na esqueda
+      //NR50_REG = 0x77;  //som da direita
+
+     
       receive_byte();
       if (reinicia == 1)
       { //quando o jogo reiniciar por pontuação
