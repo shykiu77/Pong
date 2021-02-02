@@ -155,6 +155,12 @@ void check_collision()
   if (ball_x >= RIGHT_LIMIT)
   {
     if(fix < 0){
+      NR51_REG = 0x01;
+      NR10_REG = 0X00;
+      NR11_REG = 0X81;
+      NR12_REG = 0X43;
+      NR13_REG = 0XDB;
+      NR14_REG = 0X86;
       score_left++;
       mark_score_left();
       delay(300);
@@ -168,6 +174,12 @@ void check_collision()
   {
     
     if(fix < 0){
+      NR51_REG = 0x10;
+      NR10_REG = 0X00;
+      NR11_REG = 0X81;
+      NR12_REG = 0X43;
+      NR13_REG = 0XDB;
+      NR14_REG = 0X86;
       score_right++;
       mark_score_right();
       delay(300);
@@ -184,9 +196,9 @@ void check_collision()
     NR51_REG = 0x11;
     NR10_REG = 0X00;
     NR11_REG = 0X81;
-    NR12_REG = 0X43 ;
+    NR12_REG = 0X43;
     NR13_REG = 0XF2;
-    NR14_REG = 0X85 ;
+    NR14_REG = 0X85;
     y_velocity *= -1;
     return;
   }
@@ -198,9 +210,9 @@ void check_collision()
       NR51_REG = 0x10;
       NR10_REG = 0X00;
       NR11_REG = 0X81;
-      NR12_REG = 0X43 ;
+      NR12_REG = 0X43;
       NR13_REG = 0XF2;
-      NR14_REG = 0X85 ;
+      NR14_REG = 0X85;
     if (ball_y - yl < 4)
       y_velocity = -1;
     else if (ball_y - yl > 24){
