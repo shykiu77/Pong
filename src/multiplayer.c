@@ -1,5 +1,7 @@
 #include <gb/gb.h>
 #include <stdio.h>
+
+//função para sincronizar os jogos
 int wait_for_connection(){
     receive_byte();
     int out = 0,pad;
@@ -9,6 +11,7 @@ int wait_for_connection(){
             out = 1;
     }
     if(pad == J_A){
+        _io_out = pad;
         send_byte();
         while(_io_status == IO_SENDING){;}
         return 0;
