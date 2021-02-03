@@ -360,38 +360,31 @@ void main()
 
   while (1)
   {
-    if (reinicia == 1)
-    { //quando o jogo reiniciar por pontuação
-      yl = SCREENHEIGHT / 2 - TILE_SIZE;
-      yr = SCREENHEIGHT / 2 - TILE_SIZE;
-      set_props();
-      //randomizacao removida momentaneamente
-      x_velocity = 2;
-      y_velocity = 0;
-      reinicia = 0;
-    }
-    if (reinicia == 2)
-    { //quando o jogo roda a primeira vez
-      x_velocity = 2;
-      y_velocity = 0;
-      reinicia = 0;
-    }
-
     if (side == 0)
     {
-      //espera ver o que o b faz
-      //funcao receive data
-      receive_byte();
-      while (_io_status == IO_RECEIVING)
-      {
-        ;
-      }
-      int action = _io_in;
       //NR52_REG = 0x80;  //habilita o som
       //NR50_REG = 0x77; //volume no maximo
       //NR51_REG = 0x11;  //som na esqueda
       //NR50_REG = 0x77;  //som da direita
-
+      if (reinicia == 1)
+      { //quando o jogo reiniciar por pontuação
+        yl = SCREENHEIGHT / 2 - TILE_SIZE;
+        yr = SCREENHEIGHT / 2 - TILE_SIZE;
+        set_props();
+        //randomizacao removida momentaneamente
+        x_velocity = 2;
+        y_velocity = 0;
+        reinicia = 0;
+      }
+      if (reinicia == 2)
+      { //quando o jogo roda a primeira vez
+        x_velocity = 2;
+        y_velocity = 0;
+        reinicia = 0;
+      }
+      int input[1];
+      recieve_data(input,1);
+      
       pad = joypad();
 
       if (pad & J_UP)
@@ -402,7 +395,8 @@ void main()
       {
         move_bar(side, 0);
       }
-      move_bar(!side, action);
+      move_bar(!side, input[0]);
+      
 
       update_ball();
       check_collision();
@@ -415,25 +409,24 @@ void main()
       data[5] = score_right;
       send_data(data, 6);
       //senddata  //ball_x , ball_y, yl, yr , scorel, scorer
-      wait_vbl_done();
       //gameover = 0;
     }
     else
     {
+      int input[1];
       pad = joypad();
-
+      input[0] = 3;
       if (pad & J_UP)
       {
-        send_action(1);
+        input[0] = 1;
       }
-      else if (pad & J_DOWN)
+      if (pad & J_DOWN)
       {
-        send_action(0);
+        input[0] = 0;
       }
-      else
-      {
-        send_action(3);
-      }
+      
+      send_data(input,1);
+      
       int datarecieve[6];
       recieve_data(datarecieve, 6);
       ball_x = datarecieve[0];
