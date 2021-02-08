@@ -11,7 +11,7 @@ https://youtu.be/jetZLCwwBVE
 
 1 - Clone este repositório.
 
-2 - Estando na projeto, vá até a pasta src e execute o arquivo make.
+2 - Estando no projeto, vá até a pasta src e execute o arquivo make.
 
 * Linkando os Dois Emuladores (Multiplayer):
 
