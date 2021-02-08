@@ -319,7 +319,14 @@ void set_props()
  
 void hide_all(){
   hide(L_BAR);
+  hide(L_BAR+1);
+  hide(L_BAR+2);
+  hide(L_BAR+3);
   hide(R_BAR);
+  hide(R_BAR+1);
+  hide(R_BAR+2);
+  hide(R_BAR+3);
+
   hide(BALL);
 }
  
