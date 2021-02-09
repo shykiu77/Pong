@@ -347,7 +347,7 @@ void main()
   SHOW_BKG;
   SPRITES_8x8;
  
-  set_sprite_data(0, 1, ball);
+  set_sprite_data(0, 1, ball); //diz onde o sprite esta localizado no arquivos de include
   set_sprite_data(1, 1, bar);
   set_sprite_data(2, 1, bar);
   set_sprite_data(3, 1, bar);
@@ -361,7 +361,7 @@ void main()
   set_sprite_data(15, 6, Score);
  
   for (int i = 0; i <= 20; i++)
-    set_sprite_tile(i, i);
+    set_sprite_tile(i, i);   //carregando a sprite no gameboy de fato pra que seja possivel mover para tela
  
   set_props();
   move_sprite(L_SCORE, 3 * TILE_SIZE, 2 * TILE_SIZE);
@@ -407,13 +407,13 @@ void main()
         yr = SCREENHEIGHT / 2 - TILE_SIZE;
         set_props();
         //randomizacao removida momentaneamente
-        x_velocity = 2;
+        x_velocity = 4;
         y_velocity = 0;
         reinicia = 0;
       }
       if (reinicia == 2)
       { //quando o jogo roda a primeira vez
-        x_velocity = 2;
+        x_velocity = 4;
         y_velocity = 0;
         reinicia = 0;
       }
